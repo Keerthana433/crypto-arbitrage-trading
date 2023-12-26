@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css" />
+  <title>Arbitrage Table</title>
+</head>
+<body>
+  <div class="header">
+    <h3>Arbitrage Between Binance, Kraken and UnicoinDCX</h3>
+    <button onclick="handleRefresh()">Reload</button>
+  </div>
+<div class="table-container">
+  <table id="exchangeTable">
+    <thead>
+      <tr>
+        <th>Coin Pair</th>
+        <th>Min Ask Price</th>
+        <th>Buy In</th>
+        <th>Max Bid Price</th>
+        <th>Sell In</th>
+        <th>Profit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table rows will be dynamically added here -->
+    </tbody>
+  </table>  
+</div>
+
+<script type="text/javascript">
+  const ws = new WebSocket('ws://localhost:3000');
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    updateTable(data);
+  };
+
+  function updateTable({ coinPair, minAskPrice, minExchangeName, maxBidPrice, maxBidExchangeName, profit }) {
+    const table = document.getElementById('exchangeTable').getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow(table.rows.length);
+    newRow.insertCell(0).textContent = coinPair; // Replace with actual coin pair
+    newRow.insertCell(1).textContent = minAskPrice;
+    newRow.insertCell(2).textContent = minExchangeName;
+    newRow.insertCell(3).textContent = maxBidPrice;
+    newRow.insertCell(4).textContent = maxBidExchangeName;
+    newRow.insertCell(5).textContent = profit;
+  }
+
+  function handleRefresh() {
+    var table = document.getElementById("exchangeTable");
+    var tbody = table.getElementsByTagName('tbody')[0];
+
+    // Clear existing content
+    tbody.innerHTML = '';
+  }
+  
+</script>
+
+</body>
+</html>
